@@ -1,7 +1,15 @@
-import jwt from "jsonwebtoken"
+// src/utils/token.js
 
-export const generateToken = (id) =>{
-  return jwt.sign({id}, process.env.JWT_SECRET,{
-    expiresIn:'1d'
-  })
-}
+import jwt from 'jsonwebtoken';
+
+export const generateToken = (userId) => {
+  const JWT_SECRET = '39M8AVa5g850HwFaPYxt5jAqurqQ00NSURAaW1Pp4G0='; // Replace with your actual secret key
+
+  if (!JWT_SECRET) {
+    throw new Error("JWT secret key is not defined");
+  }
+
+  return jwt.sign({ id: userId }, JWT_SECRET, {
+    expiresIn: '1d', // Token expiration time
+  });
+};
