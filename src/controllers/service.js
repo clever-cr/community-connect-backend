@@ -44,6 +44,21 @@ export const getAllServices = async (req, res) => {
     const skip = parseInt(page) * parseInt(limit);
     const services = await Service.aggregate([
       { $match: condition },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'provider',
+          foreignField: '_id',
+          as: 'providerDetails'
+        }
+      },
+      {
+        $project:{
+          provider: 1,
+          providerDetails: { $arrayElemAt: ['$providerDetails', 0] },
+        }
+     
+      },
       { $skip: skip },
       { $limit: parseInt(limit) },
     ]);

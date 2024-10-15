@@ -2,10 +2,11 @@ import httpStatus from 'http-status';
 import Response from '../utils/Response.js';
 import Service from '../models/service.js';
 import booking from '../models/booking.js';
+import mongoose from 'mongoose';
 
 export const createBooking = async (req, res) => {
   try {
-    const { consumerId, service, date } = req.body;
+    const { consumer, service, date } = req.body;
     const services = await Service.findById(service);
     console.log("servicee",services)
     if (!services) {
@@ -23,7 +24,7 @@ export const createBooking = async (req, res) => {
     //   );
     // }
     const book = await booking.create({
-      consumer: consumerId,
+      consumer: consumer,
       provider: services.provider._id,
       service: service,
       date: new Date(date),
@@ -58,12 +59,15 @@ export const createBooking = async (req, res) => {
 export const getBookingsById = async(req,res) =>{
   try{
 const {userId} = req.params
+console.log("useriddd",userId)
+const consumerBookings = await booking.find({ consumer: new mongoose.Types.ObjectId(userId) });
+console.log('Consumer Bookings:', consumerBookings);
 const bookings = await booking.aggregate([
   {
     $match: {
       $or: [
-        { consumer: mongoose.Types.ObjectId(userId) },  
-        { provider: mongoose.Types.ObjectId(userId) }  
+        { consumer: new mongoose.Types.ObjectId(userId) },  
+{ provider: new mongoose.Types.ObjectId(userId) }
       ]
     }
   },
@@ -107,7 +111,7 @@ return Response.succesMessage(
     return Response.errorMessage(
       res,
     "Internal server error",
-    https.INTERNAL_SERVER_ERROR
+    httpStatus.INTERNAL_SERVER_ERROR
     )
   }
 }
