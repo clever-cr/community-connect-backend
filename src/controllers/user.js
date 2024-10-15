@@ -39,7 +39,8 @@ export const signUp = async (req, res) => {
       httpStatus.BAD_REQUEST
     );
   } catch (error) {
-    return Response.errorMessage(res, 'Internal server error', httpStatus[500]);
+    console.log("error",error)
+    return Response.errorMessage(res, 'Internal server error', httpStatus.INTERNAL_SERVER_ERROR);
   }
 };
 

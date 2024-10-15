@@ -30,11 +30,17 @@ export const createService = async (req, res) => {
 
 export const getAllServices = async (req, res) => {
   try {
-    const { name, page = 0, limit = 15 } = req.query;
+    const {page = 0, limit = 15,type,location,availableStatus,name} = req.query;
     let condition = {};
     if (name) {
       condition['name'] = name;
     }
+    if(location){
+      condition["location"] = location
+    }
+  if(availableStatus){
+    condition["availableStatus"] = availableStatus
+  }
     const skip = parseInt(page) * parseInt(limit);
     const services = await Service.aggregate([
       { $match: condition },

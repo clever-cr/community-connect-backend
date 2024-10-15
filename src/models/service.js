@@ -16,7 +16,9 @@ const serviceSchema = new mongoose.Schema(
       type: Number,
     },
     duration: Number,
-    available: [Date],
+    availableSlots: [Date],
+    availableStatus:String,
+    location:String
   },
   {
     timestamps: true,

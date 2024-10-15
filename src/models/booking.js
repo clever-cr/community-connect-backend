@@ -10,10 +10,9 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
-    service: {
-      name: String,
-      price: Number,
-      duration: Number,
+    service:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'Service'
     },
     date: {
       type: Date,
