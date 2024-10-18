@@ -4,7 +4,6 @@ import Service from '../models/service.js';
 export const createService = async (req, res) => {
   try {
     const service = await Service.create(req.body);
-    console.log('service---', service);
     if (!service) {
       return Response.errorMessage(
         res,
@@ -19,7 +18,6 @@ export const createService = async (req, res) => {
       httpStatus.CREATED
     );
   } catch (error) {
-    console.log('error', error);
     return Response.errorMessage(
       res,
       'Internal server error',
@@ -49,16 +47,13 @@ export const getAllServices = async (req, res) => {
           from: 'users',
           localField: 'provider',
           foreignField: '_id',
-          as: 'providerDetails'
+          as: 'provider'
         }
       },
       {
-        $project:{
-          provider: 1,
-          providerDetails: { $arrayElemAt: ['$providerDetails', 0] },
-        }
-     
+        $unwind:"$provider"
       },
+    
       { $skip: skip },
       { $limit: parseInt(limit) },
     ]);
@@ -76,7 +71,6 @@ export const getAllServices = async (req, res) => {
       httpStatus.OK
     );
   } catch (error) {
-    console.log('Error', error);
     return Response.errorMessage(
       res,
       'Internal server error',
@@ -103,7 +97,6 @@ export const getServiceById = async (req, res) => {
       httpStatus.OK
     );
   } catch (error) {
-    console.log('errror', error);
     return Response.errorMessage(
       res,
       'Internal server error',
@@ -132,7 +125,6 @@ export const updateService = async (req, res) => {
       httpStatus.OK
     )
   } catch (error) {
-    console.log('error', error);
     return Response.errorMessage(
       res,
       'Internal server error',
@@ -159,7 +151,6 @@ return Response.succesMessage(
   httpStatus.OK
 )
   }catch(error){
-    console.log("error",error)
     return Response.errorMessage(
       res,
       "Internal server error",

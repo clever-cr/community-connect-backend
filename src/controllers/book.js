@@ -8,7 +8,6 @@ export const createBooking = async (req, res) => {
   try {
     const { consumer, service, date } = req.body;
     const services = await Service.findById(service);
-    console.log("servicee",services)
     if (!services) {
       return Response.errorMessage(
         res,
@@ -16,16 +15,16 @@ export const createBooking = async (req, res) => {
         httpStatus.NOT_FOUND
       );
     }
-    // if (!services.availableSlots.includes(new Date(date).toISOString())) {
-    //   return Response.errorMessage(
-    //     res,
-    //     'Selected slot is not available',
-    //     httpStatus.BAD_REQUEST
-    //   );
-    // }
+    if (!services.availableSlots.includes(new Date(date).toISOString())) {
+      return Response.errorMessage(
+        res,
+        'Selected slot is not available',
+        httpStatus.BAD_REQUEST
+      );
+    }
     const book = await booking.create({
       consumer: consumer,
-      provider: services.provider._id,
+      providers: services.provider._id,
       service: service,
       date: new Date(date),
     });
@@ -83,7 +82,7 @@ const bookings = await booking.aggregate([
   {
     $lookup: {
       from: 'users',
-      localField: 'provider',
+      localField: 'providers',
       foreignField: '_id',
       as: 'providerDetails'
     }

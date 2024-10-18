@@ -39,8 +39,11 @@ export const signUp = async (req, res) => {
       httpStatus.BAD_REQUEST
     );
   } catch (error) {
-    console.log("error",error)
-    return Response.errorMessage(res, 'Internal server error', httpStatus.INTERNAL_SERVER_ERROR);
+    return Response.errorMessage(
+      res,
+      'Internal server error',
+      httpStatus.INTERNAL_SERVER_ERROR
+    );
   }
 };
 
@@ -110,7 +113,6 @@ export const getUserById = async (req, res) => {
       httpStatus.OK
     );
   } catch (error) {
-    console.log('error', error);
     return Response.errorMessage(
       res,
       'Internal server error',
@@ -146,7 +148,6 @@ export const updateUser = async (req, res) => {
       httpStatus.OK
     );
   } catch (error) {
-    console.log('error', error);
     return Response.errorMessage(
       res,
       'Internal server error',
@@ -161,10 +162,10 @@ export const deleteUser = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return Response.errorMessage(
         res,
-        "invalid user id",
+        'invalid user id',
         httpStatus.BAD_REQUEST
-      )
-      }
+      );
+    }
     const user = await User.findByIdAndDelete(userId);
     if (!user) {
       return Response.errorMessage(
@@ -184,35 +185,33 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-export const getAllUsers = async (req,res)=>{
-  try{
-    let {page ,limit  } = req.query
-    page =   page || 0
-    limit = limit || 15
-    const skip = page*limit
-const users = await User.find().skip(skip).limit(limit)
-const total = await User.countDocuments()
-if(!users.length){
-  return Response.errorMessage(
-    res,
-    "Users data retreieved successfully",
-    httpStatus.BAD_REQUEST
-  )
-}
-return Response.succesMessage(
-  res,
-  "Users data retreieved successfully",
-  users,
-  httpStatus.OK,
-  total
-)
-
-  }catch(error){
-    console.log("error",error)
+export const getAllUsers = async (req, res) => {
+  try {
+    let { page, limit } = req.query;
+    page = page || 0;
+    limit = limit || 15;
+    const skip = page * limit;
+    const users = await User.find().skip(skip).limit(limit);
+    const total = await User.countDocuments();
+    if (!users.length) {
+      return Response.errorMessage(
+        res,
+        'Users data retreieved successfully',
+        httpStatus.BAD_REQUEST
+      );
+    }
+    return Response.succesMessage(
+      res,
+      'Users data retreieved successfully',
+      users,
+      httpStatus.OK,
+      total
+    );
+  } catch (error) {
     return Response.errorMessage(
       res,
-      "Internal server error",
+      'Internal server error',
       httpStatus.INTERNAL_SERVER_ERROR
-    )
+    );
   }
-}
+};
